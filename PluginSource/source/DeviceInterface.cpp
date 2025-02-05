@@ -54,6 +54,7 @@ namespace WeDo2Plugin
 				co_return false;
 			}
 		}
+		ClearDevice();
 		co_return true;
 	}
 
@@ -143,11 +144,6 @@ namespace WeDo2Plugin
 	/// </summary>
 	void DeviceInterface::ClearDevice()
 	{
-		if (!m_notificationTokens.empty())
-		{
-			m_notificationTokens.clear();
-		}
-
 		if (m_services != nullptr)
 		{
 			m_services = nullptr;
@@ -158,7 +154,7 @@ namespace WeDo2Plugin
 			m_device.Close();
 			m_device = nullptr;
 		}
-		m_isConnected = false;
+		Disconnected();
 	}
 
 	/// <summary>
@@ -300,7 +296,7 @@ namespace WeDo2Plugin
 		{
 			if (sender.ConnectionStatus() == BluetoothConnectionStatus::Disconnected)
 			{
-				Disconnected();
+				ClearDevice();
 			}
 		});
 		co_return;
@@ -311,7 +307,11 @@ namespace WeDo2Plugin
 	/// </summary>
 	fire_and_forget DeviceInterface::Disconnected()
 	{
-		ClearDevice();
+		m_isConnected = false;
+		if (!m_notificationTokens.empty())
+		{
+			m_notificationTokens.clear();
+		}
 		co_return;
 	}
 }
