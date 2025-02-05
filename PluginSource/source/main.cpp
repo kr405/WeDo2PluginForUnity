@@ -32,10 +32,10 @@ DLLEXPORT fire_and_forget WeDo2Plugin_Scan(ScanCompleted scanCompleted)
 /// <param name="requestCompleted">接続後に実行されるコールバック.</param>
 DLLEXPORT fire_and_forget WeDo2Plugin_Connect(uint32_t index, RequestCompleted requestCompleted)
 {
-	bool successed = co_await WeDo2Device::Instance().ConnectAsync(index);
+	bool succeeded = co_await WeDo2Device::Instance().ConnectAsync(index);
 	if (requestCompleted != nullptr)
 	{
-		requestCompleted(successed);
+		requestCompleted(succeeded);
 	}
 }
 
@@ -45,10 +45,10 @@ DLLEXPORT fire_and_forget WeDo2Plugin_Connect(uint32_t index, RequestCompleted r
 /// <param name="requestCompleted">切断後に実行されるコールバック.</param>
 DLLEXPORT fire_and_forget WeDo2Plugin_Disconnect(RequestCompleted requestCompleted)
 {
-	bool successed = co_await WeDo2Device::Instance().DisconnectAsync();
+	bool succeeded = co_await WeDo2Device::Instance().DisconnectAsync();
 	if (requestCompleted != nullptr)
 	{
-		requestCompleted(successed);
+		requestCompleted(succeeded);
 	}
 }
 
@@ -59,10 +59,10 @@ DLLEXPORT fire_and_forget WeDo2Plugin_Disconnect(RequestCompleted requestComplet
 /// <param name="requestCompleted">設定後に実行されるコールバック.</param>
 DLLEXPORT fire_and_forget WeDo2Plugin_SetLed(uint32_t rgb, RequestCompleted requestCompleted)
 {
-	bool successed = co_await WeDo2Device::Instance().SetLed(rgb);
+	bool succeeded = co_await WeDo2Device::Instance().SetLed(rgb);
 	if (requestCompleted != nullptr)
 	{
-		requestCompleted(successed);
+		requestCompleted(succeeded);
 	}
 }
 
@@ -74,10 +74,10 @@ DLLEXPORT fire_and_forget WeDo2Plugin_SetLed(uint32_t rgb, RequestCompleted requ
 /// <param name="requestCompleted">処理後に実行されるコールバック.</param>
 DLLEXPORT fire_and_forget WeDo2Plugin_PlayNote(uint16_t note, uint16_t duration, RequestCompleted requestCompleted)
 {
-	bool successed = co_await WeDo2Device::Instance().PlayNote(note, duration);
+	bool succeeded = co_await WeDo2Device::Instance().PlayNote(note, duration);
 	if (requestCompleted != nullptr)
 	{
-		requestCompleted(successed);
+		requestCompleted(succeeded);
 	}
 }
 
@@ -87,10 +87,10 @@ DLLEXPORT fire_and_forget WeDo2Plugin_PlayNote(uint16_t note, uint16_t duration,
 /// <param name="requestCompleted">停止後に実行されるコールバック.</param>
 DLLEXPORT fire_and_forget WeDo2Plugin_StopNote(RequestCompleted requestCompleted)
 {
-	bool successed = co_await WeDo2Device::Instance().StopNote();
+	bool succeeded = co_await WeDo2Device::Instance().StopNote();
 	if (requestCompleted != nullptr)
 	{
-		requestCompleted(successed);
+		requestCompleted(succeeded);
 	}
 }
 
@@ -103,10 +103,10 @@ DLLEXPORT fire_and_forget WeDo2Plugin_StopNote(RequestCompleted requestCompleted
 /// <param name="requestCompleted">処理後に実行されるコールバック.</param>
 DLLEXPORT fire_and_forget WeDo2Plugin_TurnOnMotor(uint8_t port, int8_t direction, uint8_t power, RequestCompleted requestCompleted)
 {
-	bool successed = co_await WeDo2Device::Instance().TurnOnMotor(port, direction, power);
+	bool succeeded = co_await WeDo2Device::Instance().TurnOnMotor(port, direction, power);
 	if (requestCompleted != nullptr)
 	{
-		requestCompleted(successed);
+		requestCompleted(succeeded);
 	}
 }
 

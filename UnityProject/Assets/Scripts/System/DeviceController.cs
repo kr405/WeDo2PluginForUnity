@@ -29,11 +29,12 @@ namespace WeDo2Sample
         public event Action<bool> OnConnectRequestCompleted;
         public event Action<bool> OnDisconnectRequestCompleted;
         public event Action<bool> OnConnectionStatusChanged;
+        public event Action<bool> OnRequestCompleted;
 
         Action<IntPtr, uint> m_scanCompleted;
         Action<bool> m_connectRequestCompleted;
         Action<bool> m_disconnectRequestCompleted;
-        Action<bool> m_writeRequestCompleted;
+        Action<bool> m_requestCompleted;
         Notification m_notification;
         bool m_wasConnected;
 
@@ -63,13 +64,14 @@ namespace WeDo2Sample
         {
             base.Awake();
             m_scanCompleted = (results, size) => { OnScanCompleted(results, size); };
-            m_connectRequestCompleted = (successed) => { OnConnectRequestCompleted(successed); };
-            m_disconnectRequestCompleted = (successed) => { OnDisconnectRequestCompleted(successed); };
-            m_writeRequestCompleted = (successed) => {};
+            m_connectRequestCompleted = (succeeded) => { OnConnectRequestCompleted(succeeded); };
+            m_disconnectRequestCompleted = (succeeded) => { OnDisconnectRequestCompleted(succeeded); };
+            m_requestCompleted = (succeeded) => { OnRequestCompleted(succeeded); };
 
             OnConnectionStatusChanged += NotifyConnectionStauts;
             OnConnectRequestCompleted += RequestCompleted;
             OnDisconnectRequestCompleted += RequestCompleted;
+            OnRequestCompleted += RequestCompleted;
             
             m_notification = FindAnyObjectByType<Notification>();
             SceneManager.sceneUnloaded += scene => Dispose();
@@ -92,12 +94,12 @@ namespace WeDo2Sample
         /// <summary>
         /// デバイスへのリクエストが完了したときに呼び出す.
         /// </summary>
-        /// <param name="successed">リクエストが成功したかどうか.</param>
-        void RequestCompleted(bool successed)
+        /// <param name="succeeded">リクエストが成功したかどうか.</param>
+        void RequestCompleted(bool succeeded)
         {
-            if (successed)
+            if (succeeded)
             {
-                Debug.Log("Request successed.");
+                Debug.Log("Request succeeded.");
             }
             else
             {
@@ -157,7 +159,7 @@ namespace WeDo2Sample
             int rgb = hue.r << 16;
             rgb += hue.g << 8;
             rgb += hue.b;
-            IntPtr callback = Marshal.GetFunctionPointerForDelegate(m_writeRequestCompleted);
+            IntPtr callback = Marshal.GetFunctionPointerForDelegate(m_requestCompleted);
             WeDo2Interface.SetLed((uint)rgb, callback);
         }
 
@@ -168,7 +170,7 @@ namespace WeDo2Sample
         /// <param name="duration">再生時間(ミリ秒).</param>
         public void PlayNote(ushort note, ushort duration)
         {
-            IntPtr callback = Marshal.GetFunctionPointerForDelegate(m_writeRequestCompleted);
+            IntPtr callback = Marshal.GetFunctionPointerForDelegate(m_requestCompleted);
             WeDo2Interface.PlayNote(note, duration, callback);
         }
 
@@ -177,7 +179,7 @@ namespace WeDo2Sample
         /// </summary>
         public void StopNote()
         {
-            IntPtr callback = Marshal.GetFunctionPointerForDelegate(m_writeRequestCompleted);
+            IntPtr callback = Marshal.GetFunctionPointerForDelegate(m_requestCompleted);
             WeDo2Interface.StopNote(callback);
         }
 
@@ -189,7 +191,7 @@ namespace WeDo2Sample
         /// <param name="power">回転力.</param>
         public void TurnOnMotor(Port port, Direction direction, byte power)
         {
-            IntPtr callback = Marshal.GetFunctionPointerForDelegate(m_writeRequestCompleted);
+            IntPtr callback = Marshal.GetFunctionPointerForDelegate(m_requestCompleted);
             WeDo2Interface.TurnOnMotor((byte)port, (sbyte)direction, power, callback);
         }
 
@@ -198,7 +200,7 @@ namespace WeDo2Sample
         /// </summary>
         public void StopMotor(Port port)
         {
-            IntPtr callback = Marshal.GetFunctionPointerForDelegate(m_writeRequestCompleted);
+            IntPtr callback = Marshal.GetFunctionPointerForDelegate(m_requestCompleted);
             WeDo2Interface.TurnOnMotor((byte)port, (sbyte)Direction.Left, 0, callback);
         }
     }
